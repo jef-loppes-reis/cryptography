@@ -12,7 +12,7 @@ from json import dump
 app = Flask(__name__)
 
 def generation_key() -> str:
-    key = ''.join(choice(ascii_lowercase + ascii_uppercase + digits + '^!\$%&/()=?{[]}+~#-_.:,;<>|\\') for _ in range(0, 1024))
+    key = ''.join(choice(ascii_lowercase + ascii_uppercase + digits + '^!\$%&/()=?{[]}+~#-_.:,;<>|\\') for _ in range(0, 64))
     return key
 
 def str_xor(s1:str, s2:str) -> str:
@@ -22,16 +22,25 @@ def str_xor(s1:str, s2:str) -> str:
 def main() -> str:  
     key = generation_key()
     msg = request.args.get('str')
+    descp = request.args.get('descp')
     if msg is None:
         return {}
     secret = str_xor(msg, key)
     recuperando_mensagem_secreta = str_xor(secret, key)
-    return {
-        f'{emojize(":old_key:")} key_secret(Chave Secreta)': key,
-        f'{emojize(":keyboard:")} string(Palavra digitada)': msg,
-        f'{emojize(":keyboard:")} -> {emojize(":locked_with_key:")} string_encrypted(Texto Cripitografado)': secret,
-        f'{emojize(":keyboard:")} -> {emojize(":unlocked:")} string_decrypted(Text Descriptografado)': recuperando_mensagem_secreta
-        }
+    if descp.upper() == 'TRUE':
+        return {
+            f'{emojize(":old_key:")} key_secret(Chave Secreta)': key,
+            f'{emojize(":keyboard:")} string(Palavra digitada)': msg,
+            f'{emojize(":keyboard:")} -> {emojize(":locked_with_key:")} string_encrypted(Texto Cripitografado)': secret,
+            f'{emojize(":keyboard:")} -> {emojize(":unlocked:")} string_decrypted(Text Descriptografado)': recuperando_mensagem_secreta
+            }
+    else:
+        return {
+            f'{emojize(":old_key:")} key_secret(Chave Secreta)': key,
+            # f'{emojize(":keyboard:")} string(Palavra digitada)': msg,
+            f'{emojize(":keyboard:")} -> {emojize(":locked_with_key:")} string_encrypted(Texto Cripitografado)': secret,
+            # f'{emojize(":keyboard:")} -> {emojize(":unlocked:")} string_decrypted(Text Descriptografado)': recuperando_mensagem_secreta
+            }
 
 @app.route('/decrypt')
 def decrypt():

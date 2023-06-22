@@ -36,3 +36,7 @@ str=Carro #String (Texto) digitado.
 ```sh
 descp=true #Descript Paramento que determinar se o código deve ou não apresentar o texto descriptografado.
 ```
+
+-> Resultado:
+
+![Resultado](./doc/exemplo.jpg)
